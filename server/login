@@ -1,0 +1,128 @@
+# Import the Flask module and the sqlite3 module
+from flask import Flask, request, render_template, redirect, url_for, flash
+import sqlite3
+
+# Create an instance of the Flask class
+app = Flask(_name_)
+
+# Set a secret key for the session
+app.secret_key = "secret"
+
+# Create a function to connect to the database
+def connect_db():
+    # Connect to the database file
+    conn = sqlite3.connect("patients.db")
+    # Return the connection object
+    return conn
+
+# Create a function to initialize the database
+def init_db():
+    # Connect to the database
+    conn = connect_db()
+    # Create a cursor object
+    cursor = conn.cursor()
+    # Execute the SQL commands to create the tables
+    cursor.execute("CREATE TABLE IF NOT EXISTS patients (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, contact TEXT, login_username TEXT, login_password TEXT)")
+    # Commit the changes
+    conn.commit()
+    # Close the connection
+    conn.close()
+
+# Call the init_db function
+init_db()
+
+# Define a route for the home page
+@app.route("/")
+def home():
+    # Return the home.html template
+    return render_template("home.html")
+
+# Define a route for the login page
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    # Check if the request method is POST
+    if request.method == "POST":
+        # Get the username and password from the form
+        username = request.form["username"]
+        password = request.form["password"]
+        # Connect to the database
+        conn = connect_db()
+        # Create a cursor object
+        cursor = conn.cursor()
+        # Execute the SQL command to select the patient with the given username and password
+        cursor.execute("SELECT * FROM patients WHERE login_username = ? AND login_password = ?", (username, password))
+        # Fetch the result
+        result = cursor.fetchone()
+        # Close the connection
+        conn.close()
+        # Check if the result is not None
+        if result is not None:
+            # Store the patient id in the session
+            session["patient_id"] = result[0]
+            # Redirect to the profile page
+            return redirect(url_for("profile"))
+        else:
+            # Flash an error message
+            flash("Invalid username or password")
+            # Redirect to the login page
+            return redirect(url_for("login"))
+    # Check if the request method is GET
+    else:
+        # Return the login.html template
+        return render_template("login.html")
+
+# Define a route for the profile page
+@app.route("/profile")
+def profile():
+    # Check if the patient id is in the session
+    if "patient_id" in session:
+        # Get the patient id from the session
+        patient_id = session["patient_id"]
+        # Connect to the database
+        conn = connect_db()
+        # Create a cursor object
+        cursor = conn.cursor()
+        # Execute the SQL command to select the patient with the given id
+        cursor.execute("SELECT * FROM patients WHERE id = ?", (patient_id,))
+        # Fetch the result
+        result = cursor.fetchone()
+        # Close the connection
+        conn.close()
+        # Check if the result is not None
+        if result is not None:
+            # Create a dictionary to store the patient information
+            patient_info = {
+            }
+            # Return the profile.html template with the patient_info
+            return render_template("profile.html", patient_info=patient_info)
+        else:
+            # Flash an error message
+            flash("Patient not found")
+            # Redirect to the home page
+            return redirect(url_for("home"))
+    else:
+        # Flash an error message
+        flash("Please login first")
+        # Redirect to the login page
+        return redirect(url_for("login"))
+
+# Define a route for the logout page
+@app.route("/logout")
+def logout():
+    # Check if the patient id is in the session
+    if "patient_id" in session:
+        # Pop the patient id from the session
+        session.pop("patient_id")
+        # Flash a success message
+        flash("You have logged out successfully")
+        # Redirect to the home page
+        return redirect(url_for("home"))
+    else:
+        # Flash an error message
+        flash("You are not logged in")
+        # Redirect to the login page
+        return redirect(url_for("login"))
+
+# Run the app
+if _name_ == "_main_":
+    app.run(debug=True)
