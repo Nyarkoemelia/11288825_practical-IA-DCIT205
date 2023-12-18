@@ -5,13 +5,13 @@ class PatientDatabase:
             "001": {
                 "name": "Emelia AMPOFO",
                 "address": "123 Main Street",
-                "contact_info": "+1234567890",
+                "contact_info": "+233555350146",
                 # Exclude sensitive data like emergency number, logins, password, and gender
             },
             "002": {
                 "name": "Emelia Ampofo",
                 "address": "456 Elm Street",
-                "contact_info": "+9876543210",
+                "contact_info": "+233555350146",
                 # Exclude sensitive data
             }
         }
