@@ -1,0 +1,71 @@
+# Define a class for a patient
+class Patient:
+    # Initialize the patient object with attributes
+    def _init_(self, id, username, password, login, gender, **others):
+        self.id = id # A unique identifier for the patient
+        self.username = username # A username for the patient
+        self.password = password # A password for the patient
+        self.login = login # A boolean value indicating whether the patient is logged in or not
+        self.gender = gender # The gender of the patient
+        self.others = others # A dictionary of other attributes for the patient
+
+    # Create a new patient object and return it
+    @classmethod
+    def create_patient(cls, id, username, password, login, gender, **others):
+        return cls(id, username, password, login, gender, **others)
+
+    # Update the attributes of the patient object
+    def update_patient(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    # Delete the patient object
+    def delete_patient(self):
+        del self
+
+# Example usage
+# Create a new patient object
+patient1 = Patient.create_patient(1, "Alice", "1234", False, "F", age=25, blood_type="A+")
+# Print the patient object
+print(patient1._dict_)
+# Update the patient object
+patient1.update_patient(password="4321", login=True)
+# Print the updated patient object
+print(patient1._dict_)
+# Delete the patient object
+patient1.delete_patient()# Define a class for a patient
+class Patient:
+    # Initialize the patient object with attributes
+    def _init_(self, id, username, password, login, gender, **others):
+        self.id = id # A unique identifier for the patient
+        self.username = username # A username for the patient
+        self.password = password # A password for the patient
+        self.login = login # A boolean value indicating whether the patient is logged in or not
+        self.gender = gender # The gender of the patient
+        self.others = others # A dictionary of other attributes for the patient
+
+    # Create a new patient object and return it
+    @classmethod
+    def create_patient(cls, id, username, password, login, gender, **others):
+        return cls(id, username, password, login, gender, **others)
+
+    # Update the attributes of the patient object
+    def update_patient(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+    # Delete the patient object
+    def delete_patient(self):
+        del self
+
+# Example usage
+# Create a new patient object
+patient1 = Patient.create_patient(1, "Emelia Ampofo", "1234", False, "F", age=25, blood_type="A+")
+# Print the patient object
+print(patient1._dict_)
+# Update the patient object
+patient1.update_patient(password="4321", login=True)
+# Print the updated patient object
+print(patient1._dict_)
+# Delete the patient object
+patient1.delete_patient()
