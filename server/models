@@ -1,0 +1,17 @@
+@app.route("/patients/<patient_id>", methods=["GET"])
+def get_patient_info(patient_id):
+    # Check user authorization
+    if not authorized:
+        return unauthorized_response()
+
+    # Fetch patient data from secure storage
+    patient = db.get_patient(patient_id)
+
+    # Build response with necessary data points (exclude sensitive details)
+    response_data = {
+        "patient_id": patient.patient_id,
+        "name": patient.name,
+        "address": patient.address,
+        "contact_info": patient.contact_info,
+        "emergency_contact": patient.emergency_contact,
+    }
